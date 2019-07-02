@@ -138,6 +138,92 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-爬取微信公众号文章并保存为PDF文件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/02/爬取微信公众号文章并保存为PDF文件/">使用Python爬取微信公众号文章并保存为PDF文件</a>
+    </h1>
+  
+
+        
+        <a href="/2019/07/02/爬取微信公众号文章并保存为PDF文件/" class="archive-article-date">
+  	<time datetime="2019-07-02T07:39:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>第一次写博客，主要内容是爬取微信公众号的文章，将文章以PDF格式保存在本地。</p>
+<h2 id="爬取微信公众号文章（使用wechatsogou）"><a href="#爬取微信公众号文章（使用wechatsogou）" class="headerlink" title="爬取微信公众号文章（使用wechatsogou）"></a>爬取微信公众号文章（使用wechatsogou）</h2><h3 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install wechatsogou --upgrade</span><br></pre></td></tr></table></figure>
+
+<p>wechatsogou是一个基于搜狗微信搜索的微信公众号爬虫接口</p>
+<h3 id="2-使用方法"><a href="#2-使用方法" class="headerlink" title="2.使用方法"></a>2.使用方法</h3><p>使用方法如下所示</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> wechatsogou</span><br><span class="line"><span class="comment"># captcha_break_time为验证码输入错误的重试次数，默认为1</span></span><br><span class="line">ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=<span class="number">3</span>)</span><br><span class="line"><span class="comment"># 公众号名称</span></span><br><span class="line">gzh_name = <span class="string">''</span></span><br><span class="line"><span class="comment"># 将该公众号最近10篇文章信息以字典形式返回</span></span><br><span class="line">data = ws_api.get_gzh_article_by_history(gzh_name)</span><br></pre></td></tr></table></figure>
+
+<p>data数据结构：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">'gzh'</span>: &#123;</span><br><span class="line">        <span class="string">'wechat_name'</span>: <span class="string">''</span>,  <span class="comment"># 名称</span></span><br><span class="line">        <span class="string">'wechat_id'</span>: <span class="string">''</span>,  <span class="comment"># 微信id</span></span><br><span class="line">        <span class="string">'introduction'</span>: <span class="string">''</span>,  <span class="comment"># 简介</span></span><br><span class="line">        <span class="string">'authentication'</span>: <span class="string">''</span>,  <span class="comment"># 认证</span></span><br><span class="line">        <span class="string">'headimage'</span>: <span class="string">''</span>  <span class="comment"># 头像</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'article'</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">'send_id'</span>: int,  <span class="comment"># 群发id，注意不唯一，因为同一次群发多个消息，而群发id一致</span></span><br><span class="line">            <span class="string">'datetime'</span>: int,  <span class="comment"># 群发datatime 10位时间戳</span></span><br><span class="line">            <span class="string">'type'</span>: <span class="string">''</span>,  <span class="comment"># 消息类型，均是49（在手机端历史消息页有其他类型，网页端最近10条消息页只有49），表示图文</span></span><br><span class="line">            <span class="string">'main'</span>: int,  <span class="comment"># 是否是一次群发的第一次消息 1 or 0</span></span><br><span class="line">            <span class="string">'title'</span>: <span class="string">''</span>,  <span class="comment"># 文章标题</span></span><br><span class="line">            <span class="string">'abstract'</span>: <span class="string">''</span>,  <span class="comment"># 摘要</span></span><br><span class="line">            <span class="string">'fileid'</span>: int,  <span class="comment">#</span></span><br><span class="line">            <span class="string">'content_url'</span>: <span class="string">''</span>,  <span class="comment"># 文章链接</span></span><br><span class="line">            <span class="string">'source_url'</span>: <span class="string">''</span>,  <span class="comment"># 阅读原文的链接</span></span><br><span class="line">            <span class="string">'cover'</span>: <span class="string">''</span>,  <span class="comment"># 封面图</span></span><br><span class="line">            <span class="string">'author'</span>: <span class="string">''</span>,  <span class="comment"># 作者</span></span><br><span class="line">            <span class="string">'copyright_stat'</span>: int,  <span class="comment"># 文章类型，例如：原创啊</span></span><br><span class="line">        &#125;,</span><br><span class="line">        ...</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要得到两个信息：文章标题，文章url。</p>
+<p>得到文章url以后，就可以根据url将html页面转换成pdf文件了。</p>
+<h2 id="生成PDF文件"><a href="#生成PDF文件" class="headerlink" title="生成PDF文件"></a>生成PDF文件</h2><h3 id="1-安装wkhtmltopdf"><a href="#1-安装wkhtmltopdf" class="headerlink" title="1.安装wkhtmltopdf"></a>1.安装wkhtmltopdf</h3><p>下载地址:<a href="https://wkhtmltopdf.org/downloads.html" target="_blank" rel="noopener">https://wkhtmltopdf.org/downloads.html</a></p>
+<h3 id="2-安装pdfkit"><a href="#2-安装pdfkit" class="headerlink" title="2.安装pdfkit"></a>2.安装pdfkit</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pdfkit</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-使用方法"><a href="#3-使用方法" class="headerlink" title="3.使用方法"></a>3.使用方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pdfkit</span><br><span class="line"><span class="comment"># 根据url生成pdf</span></span><br><span class="line">pdfkit.from_url(<span class="string">'http://baidu.com'</span>,<span class="string">'out.pdf'</span>)</span><br><span class="line"><span class="comment"># 根据html文件生成pdf</span></span><br><span class="line">pdfkit.from_file(<span class="string">'test.html'</span>,<span class="string">'out.pdf'</span>)</span><br><span class="line"><span class="comment"># 根据html代码生成pdf</span></span><br><span class="line">pdfkit.from_string(<span class="string">'Hello!'</span>,<span class="string">'out.pdf'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果直接用上面得到的文章url去生成pdf，会出现pdf文件不显示文章图片的问题。</p>
+<p>解决办法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 该方法根据文章url对html进行处理，使图片显示</span></span><br><span class="line">content_info = ws_api.get_article_content(url)</span><br><span class="line"><span class="comment"># 得到html代码(代码不完整，需要加入head、body等标签)</span></span><br><span class="line">html_code = content_info[<span class="string">'content_html'</span>]</span><br></pre></td></tr></table></figure>
+
+<p>然后根据html_code构造完整的html代码，调用<code>pdfkit.from_string()</code>方法生成pdf文件，这时候会发现文章中的图片在pdf文件中显示出来了。</p>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pdfkit</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> wechatsogou</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化API</span></span><br><span class="line">ws_api = wechatsogou.WechatSogouAPI(captcha_break_time=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">url2pdf</span><span class="params">(url, title, targetPath)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    使用pdfkit生成pdf文件</span></span><br><span class="line"><span class="string">    :param url: 文章url</span></span><br><span class="line"><span class="string">    :param title: 文章标题</span></span><br><span class="line"><span class="string">    :param targetPath: 存储pdf文件的路径</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        content_info = ws_api.get_article_content(url)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment"># 处理后的html</span></span><br><span class="line">    html = <span class="string">f'''</span></span><br><span class="line"><span class="string">    &lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="string">    &lt;html lang="en"&gt;</span></span><br><span class="line"><span class="string">    &lt;head&gt;</span></span><br><span class="line"><span class="string">        &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">        &lt;title&gt;<span class="subst">&#123;title&#125;</span>&lt;/title&gt;</span></span><br><span class="line"><span class="string">    &lt;/head&gt;</span></span><br><span class="line"><span class="string">    &lt;body&gt;</span></span><br><span class="line"><span class="string">    &lt;h2 style="text-align: center;font-weight: 400;"&gt;<span class="subst">&#123;title&#125;</span>&lt;/h2&gt;</span></span><br><span class="line"><span class="string">    <span class="subst">&#123;content_info[<span class="string">'content_html'</span>]&#125;</span></span></span><br><span class="line"><span class="string">    &lt;/body&gt;</span></span><br><span class="line"><span class="string">    &lt;/html&gt;</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        pdfkit.from_string(html, targetPath + os.path.sep + <span class="string">f'<span class="subst">&#123;title&#125;</span>.pdf'</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="comment"># 部分文章标题含特殊字符，不能作为文件名</span></span><br><span class="line">        filename = datetime.datetime.now().strftime(<span class="string">'%Y%m%d%H%M%S'</span>) + <span class="string">'.pdf'</span></span><br><span class="line">        pdfkit.from_string(html, targetPath + os.path.sep + filename)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="comment"># 此处为要爬取公众号的名称</span></span><br><span class="line">    gzh_name = <span class="string">''</span></span><br><span class="line">    targetPath = os.getcwd() + os.path.sep + gzh_name</span><br><span class="line">    <span class="comment"># 如果不存在目标文件夹就进行创建</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(targetPath):</span><br><span class="line">        os.makedirs(targetPath)</span><br><span class="line">    <span class="comment"># 将该公众号最近10篇文章信息以字典形式返回</span></span><br><span class="line">    data = ws_api.get_gzh_article_by_history(gzh_name)</span><br><span class="line">    article_list = data[<span class="string">'article'</span>]</span><br><span class="line">    <span class="keyword">for</span> article <span class="keyword">in</span> article_list:</span><br><span class="line">        url = article[<span class="string">'content_url'</span>]</span><br><span class="line">        title = article[<span class="string">'title'</span>]</span><br><span class="line">        url2pdf(url, title, targetPath)</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/07/02/爬取微信公众号文章并保存为PDF文件/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-测试文章" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
